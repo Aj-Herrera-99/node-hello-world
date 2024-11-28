@@ -14,7 +14,7 @@ function printArgs(arg0, arg1, ...rest) {
 }
 
 console.log();
-const myData = getData("https://jsonplaceholder.typicode.com/poss?", {
+const myData = getData("https://jsonplaceholder.typicode.com/posts?", {
     params: {
         _limit: 5,
     },
