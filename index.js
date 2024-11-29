@@ -1,8 +1,10 @@
-import axios from "axios";
+// import axios from "axios";
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var axios = require("axios");
 
 console.log("Hello " + (process.argv[2] ?? "user undefined") + "\n");
 
-printArgs(...process.argv);
+// printArgs(...process.argv);
 
 function printArgs(arg0, arg1, ...rest) {
     try {
@@ -14,23 +16,31 @@ function printArgs(arg0, arg1, ...rest) {
 }
 
 console.log();
-const myData = getData("https://jsonplaceholder.typicode.com/posts?", {
-    params: {
-        _limit: 5,
-    },
-});
+getData("https://jsonplaceholder.typicode.com/posts?_limit=5")
+    .then((res) => {
+        if(res.data.length > 30) throw new Error("Length out of bound");
+        printTitles(res.data);
+    })
+    .catch((e) => console.error(e));
 
-myData.then((data) => printTitles(data)).catch((e) => console.log(e));
+function getData(path) {
+    return axios.get(path);
+    // return new Promise((res, rej) => {
+    //     let req = new XMLHttpRequest();
+    //     req.open("GET", path);
+    //     req.onload = () => {
+    //         console.log(req.status);
+    //         if (req.status == 200) {
+    //             // console.log(req);
+    //             res(JSON.parse(req.responseText));
+    //         } else {
+    //             console.log(req.status);
 
-async function getData(path, params) {
-    try {
-        const res = await axios.get(path, params);
-        const myData = res.data;
-        if (!myData.length) throw new Error("No data found");
-        return myData;
-    } catch (e) {
-        console.error(e);
-    }
+    //             rej("No Data Found");
+    //         }
+    //     };
+    //     req.send();
+    // });
 }
 
 function printTitles(arrObjs) {
